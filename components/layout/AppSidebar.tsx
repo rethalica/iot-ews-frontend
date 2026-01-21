@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Users, Activity } from "lucide-react";
+import { LayoutDashboard, Users, Activity, History } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -28,6 +28,11 @@ const items = [
     title: "User Management",
     url: "/admin/users",
     icon: Users,
+  },
+  {
+    title: "History",
+    url: "/history",
+    icon: History,
   },
 ];
 
