@@ -104,8 +104,9 @@ export function useRssiHistory({ initialLimit = 10 }: UseRssiHistoryParams = {})
   }
 
   const handleSort = (field: string, direction: "asc" | "desc") => {
-    console.log("Sorting changed:", field, direction)
     setSorting({ field, direction })
+    // Reset to first page when sorting changes to avoid empty states or confusing results
+    setPagination((prev) => ({ ...prev, page: 1 }))
   }
 
   const exportData = async (format: "csv" | "excel", selectedColumns?: string[]) => {

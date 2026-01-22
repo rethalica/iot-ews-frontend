@@ -95,6 +95,9 @@ export function HistoryTable<TData, TValue>({
         const newField = newSorting[0].id;
         const newDirection = newSorting[0].desc ? "desc" : "asc";
         onSortingChange(newField, newDirection);
+      } else {
+        // Fallback to default sorting if cleared or unsorted
+        onSortingChange("timestamp", "desc");
       }
     },
   });
@@ -141,7 +144,7 @@ export function HistoryTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-4">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -165,41 +168,44 @@ export function HistoryTable<TData, TValue>({
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex text-sm text-muted-foreground">
-          Page {pagination.page} of {pagination.totalPages} ({pagination.total}{" "}
-          items)
+      <div className="flex flex-col items-center justify-between gap-4 px-2 sm:flex-row">
+        <div className="flex text-sm text-muted-foreground order-2 sm:order-1">
+          <span className="hidden sm:inline">Page </span> {pagination.page}{" "}
+          <span className="mx-1">of</span> {pagination.totalPages}{" "}
+          <span className="ml-1">({pagination.total} items)</span>
         </div>
-        <div className="flex items-center space-x-2">
-          {/* First Page */}
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => onPageChange(1)}
-            disabled={pagination.page === 1 || loading}
-          >
-            <span className="sr-only">Go to first page</span>
-            <ChevronsLeft className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center space-x-2 order-1 sm:order-2">
+          <div className="flex items-center space-x-1">
+            {/* First Page */}
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onPageChange(1)}
+              disabled={pagination.page === 1 || loading}
+            >
+              <span className="sr-only">Go to first page</span>
+              <ChevronsLeft className="h-4 w-4" />
+            </Button>
 
-          {/* Previous Page */}
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => onPageChange(pagination.page - 1)}
-            disabled={pagination.page === 1 || loading}
-          >
-            <span className="sr-only">Go to previous page</span>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
+            {/* Previous Page */}
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onPageChange(pagination.page - 1)}
+              disabled={pagination.page === 1 || loading}
+            >
+              <span className="sr-only">Go to previous page</span>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+          </div>
 
-          {/* Page Size Selector - between arrows */}
-          <div className="flex items-center gap-2 px-2">
+          {/* Page Size Selector */}
+          <div className="flex items-center px-1">
             <Select
               value={pageSize.toString()}
               onValueChange={(value) => onPageSizeChange(parseInt(value, 10))}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-[65px]">
                 <SelectValue placeholder="10" />
               </SelectTrigger>
               <SelectContent>
@@ -209,32 +215,31 @@ export function HistoryTable<TData, TValue>({
                 <SelectItem value="100">100</SelectItem>
               </SelectContent>
             </Select>
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
-              / page
-            </span>
           </div>
 
-          {/* Next Page */}
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => onPageChange(pagination.page + 1)}
-            disabled={pagination.page === pagination.totalPages || loading}
-          >
-            <span className="sr-only">Go to next page</span>
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center space-x-1">
+            {/* Next Page */}
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onPageChange(pagination.page + 1)}
+              disabled={pagination.page === pagination.totalPages || loading}
+            >
+              <span className="sr-only">Go to next page</span>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
 
-          {/* Last Page */}
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0"
-            onClick={() => onPageChange(pagination.totalPages)}
-            disabled={pagination.page === pagination.totalPages || loading}
-          >
-            <span className="sr-only">Go to last page</span>
-            <ChevronsRight className="h-4 w-4" />
-          </Button>
+            {/* Last Page */}
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0"
+              onClick={() => onPageChange(pagination.totalPages)}
+              disabled={pagination.page === pagination.totalPages || loading}
+            >
+              <span className="sr-only">Go to last page</span>
+              <ChevronsRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
