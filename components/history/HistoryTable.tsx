@@ -111,7 +111,7 @@ export function HistoryTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="px-1">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -144,7 +144,7 @@ export function HistoryTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-4">
+                    <TableCell key={cell.id} className="py-3 px-4">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -168,14 +168,18 @@ export function HistoryTable<TData, TValue>({
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex flex-col items-center justify-between gap-4 px-2 sm:flex-row">
-        <div className="flex text-sm text-muted-foreground order-2 sm:order-1">
-          <span className="hidden sm:inline">Page </span> {pagination.page}{" "}
-          <span className="mx-1">of</span> {pagination.totalPages}{" "}
-          <span className="ml-1">({pagination.total} items)</span>
+      <div className="flex flex-col items-center justify-between gap-6 px-2 py-4 sm:flex-row">
+        <div className="flex items-center text-sm font-medium text-muted-foreground order-2 sm:order-1">
+          <span className="hidden sm:inline">Page</span>{" "}
+          <span className="mx-1 text-foreground">{pagination.page}</span>{" "}
+          <span className="mx-1">of</span>{" "}
+          <span className="mx-1 text-foreground">{pagination.totalPages}</span>
+          <span className="ml-2 text-xs opacity-70">
+            ({pagination.total} items)
+          </span>
         </div>
-        <div className="flex items-center space-x-2 order-1 sm:order-2">
-          <div className="flex items-center space-x-1">
+        <div className="flex items-center gap-4 order-1 sm:order-2">
+          <div className="flex items-center gap-1.5">
             {/* First Page */}
             <Button
               variant="outline"
@@ -200,12 +204,15 @@ export function HistoryTable<TData, TValue>({
           </div>
 
           {/* Page Size Selector */}
-          <div className="flex items-center px-1">
+          <div className="flex items-center gap-2">
+            <span className="hidden text-xs font-medium text-muted-foreground lg:inline">
+              Rows:
+            </span>
             <Select
               value={pageSize.toString()}
               onValueChange={(value) => onPageSizeChange(parseInt(value, 10))}
             >
-              <SelectTrigger className="h-8 w-[65px]">
+              <SelectTrigger className="h-8 w-[70px]">
                 <SelectValue placeholder="10" />
               </SelectTrigger>
               <SelectContent>
@@ -217,7 +224,7 @@ export function HistoryTable<TData, TValue>({
             </Select>
           </div>
 
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center gap-1.5">
             {/* Next Page */}
             <Button
               variant="outline"

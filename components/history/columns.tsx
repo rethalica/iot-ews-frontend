@@ -25,7 +25,7 @@ const SortableHeader = ({ column, title }: SortableHeaderProps) => {
     <Button
       variant="ghost"
       onClick={() => column.toggleSorting(sorted === "asc")}
-      className="hover:bg-transparent px-0 font-bold -ml-3"
+      className="hover:bg-transparent px-0 font-bold"
     >
       {title}
       {sorted === "asc" ? (
