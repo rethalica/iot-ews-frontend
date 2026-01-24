@@ -75,7 +75,7 @@ export function SystemStats() {
           </span>
         </div>
 
-        <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900">
+        {/* <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-cyan-100 dark:bg-cyan-900 rounded-md">
               <Database className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
@@ -83,7 +83,7 @@ export function SystemStats() {
             <span className="text-sm font-medium">Peak Water Level</span>
           </div>
           <span className="font-bold">{stats.maxWater} cm</span>
-        </div>
+        </div> */}
 
         <div className="pt-2 text-xs text-muted-foreground text-center">
           Based on last {stats.count} data points (6 hours)

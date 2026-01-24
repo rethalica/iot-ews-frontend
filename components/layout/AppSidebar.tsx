@@ -25,14 +25,14 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: "User Management",
-    url: "/admin/users",
-    icon: Users,
-  },
-  {
     title: "History",
     url: "/history",
     icon: History,
+  },
+  {
+    title: "User Management",
+    url: "/admin/users",
+    icon: Users,
   },
 ];
 

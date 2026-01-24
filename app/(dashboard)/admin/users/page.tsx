@@ -44,7 +44,7 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
 
   const filteredUsers = users.filter((u) =>
-    u.email.toLowerCase().includes(search.toLowerCase())
+    u.email.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
