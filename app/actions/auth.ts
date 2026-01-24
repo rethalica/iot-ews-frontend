@@ -1,6 +1,6 @@
 'use server'
 
-import { createSession, deleteSession } from '@/lib/session'
+import { createSession, deleteSession, getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 
 const API_Base_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
@@ -37,6 +37,10 @@ export async function login(currentState: any, formData: FormData) {
   }
   
   redirect('/')
+}
+
+export async function getUserSession() {
+  return await getSession()
 }
 
 export async function logout() {
