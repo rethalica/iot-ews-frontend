@@ -53,13 +53,7 @@ export const columns: ColumnDef<RssiLog>[] = [
     enableSorting: true,
     cell: ({ row }) => {
       const val = row.getValue("rssiDbm") as number;
-      let color = "text-gray-500";
-      if (val >= -50) color = "text-green-600";
-      else if (val >= -70) color = "text-blue-600";
-      else if (val >= -80) color = "text-yellow-600";
-      else color = "text-red-600";
-
-      return <span className={`font-medium ${color}`}>{val} dBm</span>;
+      return <span className="font-medium">{val} dBm</span>;
     },
   },
   {
@@ -70,13 +64,7 @@ export const columns: ColumnDef<RssiLog>[] = [
     enableSorting: true,
     cell: ({ row }) => {
       const val = row.getValue("signalStrength") as string;
-      let color = "text-gray-500";
-      if (val === "Excellent") color = "text-green-600";
-      if (val === "Good") color = "text-blue-600";
-      if (val === "Fair") color = "text-yellow-600";
-      if (val === "Poor") color = "text-red-600";
-
-      return <span className={`font-medium ${color}`}>{val}</span>;
+      return <span className="font-medium">{val}</span>;
     },
   },
   {

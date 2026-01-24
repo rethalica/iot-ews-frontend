@@ -2,7 +2,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMonitorStore } from "@/store/useMonitorStore";
-import { Activity, ArrowUp, ArrowDown, Database } from "lucide-react";
+import {
+  Activity,
+  ArrowUp,
+  ArrowDown,
+  Database,
+  ChartNoAxesCombined,
+} from "lucide-react";
 
 export function SystemStats() {
   const history = useMonitorStore((state) => state.history);
@@ -30,7 +36,7 @@ export function SystemStats() {
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Activity className="h-5 w-5 text-blue-600" />
+          <ChartNoAxesCombined className="h-5 w-5 text-blue-600" />
           System Statistics
         </CardTitle>
       </CardHeader>
@@ -74,7 +80,7 @@ export function SystemStats() {
             <div className="p-2 bg-cyan-100 dark:bg-cyan-900 rounded-md">
               <Database className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
             </div>
-            <span className="text-sm font-medium">Max Water Level</span>
+            <span className="text-sm font-medium">Peak Water Level</span>
           </div>
           <span className="font-bold">{stats.maxWater} cm</span>
         </div>

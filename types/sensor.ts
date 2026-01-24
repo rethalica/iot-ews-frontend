@@ -5,4 +5,4 @@ export interface SensorData {
   timestamp: string | Date
 }
 
-export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting'
+export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting' | 'reconnecting'

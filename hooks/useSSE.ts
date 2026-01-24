@@ -33,8 +33,8 @@ export const useSSE = (url: string) => {
 
     es.onerror = (error) => {
       console.error('SSE Error:', error)
-      // EventSource naturally tries to reconnect, but let's update status
-      setStatus('disconnected')
+      // EventSource naturally tries to reconnect
+      setStatus('reconnecting')
     }
 
     return () => {

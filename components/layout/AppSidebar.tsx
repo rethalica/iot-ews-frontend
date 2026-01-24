@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Users, Activity, History } from "lucide-react";
+import { LayoutDashboard, Users, History, Network } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -47,10 +47,10 @@ export function AppSidebar() {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-sidebar-primary-foreground">
-                  <Activity className="size-4 text-white" />
+                  <Network className="size-4 text-white" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">RSSI Master</span>
+                  <span className="font-semibold">IoT Network</span>
                   <span className="">Monitoring System</span>
                 </div>
               </Link>
