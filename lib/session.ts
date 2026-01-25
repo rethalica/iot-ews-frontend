@@ -62,3 +62,9 @@ export async function getSession() {
         return null
     }
 }
+
+export async function getRawToken() {
+  const cookieStore = await cookies()
+  return cookieStore.get(cookieName)?.value
+}
+

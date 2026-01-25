@@ -1,12 +1,11 @@
 'use server'
 
-import { getSession } from '@/lib/session'
+import { getRawToken } from '@/lib/session'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
 
 async function getAuthHeaders() {
-  const session = await getSession();
-  const token = session?.accessToken; // Adjust based on session structure in session.ts
+  const token = await getRawToken();
 
   return {
     'Content-Type': 'application/json',
@@ -23,19 +22,8 @@ async function getAuthHeaders() {
 
 export async function getUsersAction() {
   try {
-    const session = await getSession();
-    // We need the raw token from the cookie, not the decoded payload.
-    // However, deleteSession and createSession handle cookies.
-    // Let's import cookies from next/headers to get raw token.
-    const { cookies } = await import('next/headers');
-    const cookieStore = await cookies();
-    const token = cookieStore.get('session_token')?.value;
-
     const response = await fetch(`${API_BASE_URL}/api/users`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      },
+      headers: await getAuthHeaders(),
       next: { revalidate: 0 } // Ensure fresh data
     });
 
@@ -54,16 +42,9 @@ export async function getUsersAction() {
 
 export async function createUserAction(userData: any) {
   try {
-    const { cookies } = await import('next/headers');
-    const cookieStore = await cookies();
-    const token = cookieStore.get('session_token')?.value;
-
     const response = await fetch(`${API_BASE_URL}/api/users`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      },
+      headers: await getAuthHeaders(),
       body: JSON.stringify(userData),
     });
 
@@ -81,16 +62,9 @@ export async function createUserAction(userData: any) {
 
 export async function updateUserAction(id: number, userData: any) {
   try {
-    const { cookies } = await import('next/headers');
-    const cookieStore = await cookies();
-    const token = cookieStore.get('session_token')?.value;
-
     const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      },
+      headers: await getAuthHeaders(),
       body: JSON.stringify(userData),
     });
 
@@ -108,16 +82,9 @@ export async function updateUserAction(id: number, userData: any) {
 
 export async function deleteUserAction(id: number) {
   try {
-    const { cookies } = await import('next/headers');
-    const cookieStore = await cookies();
-    const token = cookieStore.get('session_token')?.value;
-
     const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      },
+      headers: await getAuthHeaders(),
     });
 
     if (!response.ok) {

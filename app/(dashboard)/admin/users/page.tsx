@@ -98,7 +98,7 @@ export default function UsersPage() {
     const result = createUserSchema.safeParse(createForm);
     if (!result.success) {
       const errors: FormErrors = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         const field = err.path[0] as keyof CreateUserInput;
         errors[field] = err.message;
       });
@@ -127,7 +127,7 @@ export default function UsersPage() {
     const result = updateUserSchema.safeParse(editForm);
     if (!result.success) {
       const errors: FormErrors = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         const field = err.path[0] as keyof UpdateUserInput;
         errors[field] = err.message;
       });
