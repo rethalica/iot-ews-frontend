@@ -1,12 +1,12 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import {
   Line,
   LineChart,
   CartesianGrid,
   XAxis,
   YAxis,
-  ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
 import {
@@ -46,14 +46,18 @@ const thresholds = [
   { label: "Poor", description: "Lower than -100 dBm", color: "#36454F" },
 ];
 
-export function TrendChart() {
+export const TrendChart = memo(function TrendChart() {
   const history = useMonitorStore((state) => state.history);
 
-  // Map history to chart format
-  const chartData = history.map((item) => ({
-    time: format(new Date(item.timestamp), "dd-MM-yyyy | HH:mm"),
-    rssi: item.rssi_dbm,
-  }));
+  // Memoize expensive chart data transformation
+  const chartData = useMemo(
+    () =>
+      history.map((item) => ({
+        time: format(new Date(item.timestamp), "dd-MM-yyyy | HH:mm"),
+        rssi: item.rssi_dbm,
+      })),
+    [history],
+  );
 
   return (
     <Card className="h-full">
@@ -62,7 +66,7 @@ export function TrendChart() {
         <CardDescription>Signal strength (last 100 points)</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+        <ChartContainer config={chartConfig} className="min-h-62.5 w-full">
           <LineChart
             data={chartData}
             margin={{ left: -20, right: 10, top: 10, bottom: 20 }}
@@ -134,4 +138,4 @@ export function TrendChart() {
       </CardContent>
     </Card>
   );
-}
+});

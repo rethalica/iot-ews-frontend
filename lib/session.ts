@@ -1,5 +1,5 @@
 import 'server-only'
-import { SignJWT, jwtVerify } from 'jose'
+import { SignJWT, jwtVerify, JWTPayload } from 'jose'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -7,7 +7,7 @@ const key = new TextEncoder().encode(process.env.JWT_SECRET)
 
 const cookieName = 'session_token'
 
-export async function encrypt(payload: any) {
+export async function encrypt(payload: JWTPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -15,7 +15,7 @@ export async function encrypt(payload: any) {
     .sign(key)
 }
 
-export async function decrypt(input: string): Promise<any> {
+export async function decrypt(input: string): Promise<JWTPayload> {
   const { payload } = await jwtVerify(input, key, {
     algorithms: ['HS256'],
   })
@@ -30,9 +30,18 @@ export async function createSession(token: string) {
   // or just store the backend token directly if it's safe.
   // Here we store the backend token directly as 'session_token'.
   
+  // Determine if we should use secure cookies. 
+  // We default to false to allow HTTP deployments (local/intranet).
+  // We only enable secure cookies if we are in production AND specifically using HTTPS for the API, 
+  // or if explicitly configured via an environment variable.
+  const isSecure = process.env.NODE_ENV === 'production' && (
+      process.env.NEXT_PUBLIC_API_BASE_URL?.startsWith('https') || 
+      process.env.USE_SECURE_COOKIES === 'true'
+  );
+
   cookieStore.set(cookieName, token, {
     httpOnly: true,
-    secure: true,
+    secure: isSecure,
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',
@@ -58,7 +67,7 @@ export async function getSession() {
         // Let's assume we copy the secret to frontend .env
         const { payload } = await jwtVerify(token, key)
         return payload
-    } catch (error) {
+    } catch {
         return null
     }
 }

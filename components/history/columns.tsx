@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Column } from "@tanstack/react-table";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ export type RssiLog = {
 };
 
 interface SortableHeaderProps {
-  column: any;
+  column: Column<RssiLog, unknown>;
   title: string;
 }
 

@@ -23,11 +23,11 @@ interface UseUsersReturn {
   createUser: (data: {
     email: string;
     password: string;
-    role?: string;
+    role?: "admin" | "officer";
   }) => Promise<{ success: boolean; error?: string }>;
   updateUser: (
     id: number,
-    data: { email?: string; password?: string; role?: string },
+    data: { email?: string; password?: string; role?: "admin" | "officer" },
   ) => Promise<{ success: boolean; error?: string }>;
   deleteUser: (id: number) => Promise<{ success: boolean; error?: string }>;
 }
@@ -60,7 +60,7 @@ export function useUsers(): UseUsersReturn {
   }, []);
 
   const createUser = useCallback(
-    async (data: { email: string; password: string; role?: string }) => {
+    async (data: { email: string; password: string; role?: "admin" | "officer" }) => {
       try {
         const result = await createUserAction(data);
 
@@ -83,11 +83,11 @@ export function useUsers(): UseUsersReturn {
   const updateUser = useCallback(
     async (
       id: number,
-      data: { email?: string; password?: string; role?: string },
+      data: { email?: string; password?: string; role?: "admin" | "officer" },
     ) => {
       try {
         // Filter out empty password
-        const cleanData: any = { ...data };
+        const cleanData: { email?: string; password?: string; role?: "admin" | "officer" } = { ...data };
         if (cleanData.password === "") {
           delete cleanData.password;
         }

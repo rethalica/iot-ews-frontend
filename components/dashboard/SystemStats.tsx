@@ -1,36 +1,51 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMonitorStore } from "@/store/useMonitorStore";
 import {
   Activity,
   ArrowUp,
   ArrowDown,
-  Database,
   ChartNoAxesCombined,
 } from "lucide-react";
 
-export function SystemStats() {
+export const SystemStats = memo(function SystemStats() {
   const history = useMonitorStore((state) => state.history);
 
-  const stats = {
-    avgRssi:
-      history.length > 0
-        ? (
-            history.reduce((acc, curr) => acc + curr.rssi_dbm, 0) /
-            history.length
-          ).toFixed(1)
-        : "--",
-    maxRssi:
-      history.length > 0 ? Math.max(...history.map((i) => i.rssi_dbm)) : "--",
-    minRssi:
-      history.length > 0 ? Math.min(...history.map((i) => i.rssi_dbm)) : "--",
-    maxWater:
-      history.length > 0
-        ? Math.max(...history.map((i) => i.water_level_cm)).toFixed(1)
-        : "--",
-    count: history.length,
-  };
+  // Memoized stats with single-loop optimization (instead of 4 separate iterations)
+  const stats = useMemo(() => {
+    if (history.length === 0) {
+      return {
+        avgRssi: "--",
+        maxRssi: "--",
+        minRssi: "--",
+        maxWater: "--",
+        count: 0,
+      };
+    }
+
+    // Single loop for all calculations - more efficient than reduce + 3x map
+    let sum = 0;
+    let maxRssi = -Infinity;
+    let minRssi = Infinity;
+    let maxWater = 0;
+
+    for (const item of history) {
+      sum += item.rssi_dbm;
+      if (item.rssi_dbm > maxRssi) maxRssi = item.rssi_dbm;
+      if (item.rssi_dbm < minRssi) minRssi = item.rssi_dbm;
+      if (item.water_level_cm > maxWater) maxWater = item.water_level_cm;
+    }
+
+    return {
+      avgRssi: (sum / history.length).toFixed(1),
+      maxRssi,
+      minRssi,
+      maxWater: maxWater.toFixed(1),
+      count: history.length,
+    };
+  }, [history]);
 
   return (
     <Card className="h-full">
@@ -91,4 +106,4 @@ export function SystemStats() {
       </CardContent>
     </Card>
   );
-}
+});

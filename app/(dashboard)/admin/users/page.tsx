@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -166,17 +166,19 @@ export default function UsersPage() {
     setIsEditOpen(true);
   };
 
-  // Reset forms when dialogs close
-  useEffect(() => {
-    if (!isCreateOpen) resetCreateForm();
-  }, [isCreateOpen]);
+  // Handlers for dialog open state changes - resets form when closing
+  const handleCreateOpenChange = (open: boolean) => {
+    setIsCreateOpen(open);
+    if (!open) resetCreateForm();
+  };
 
-  useEffect(() => {
-    if (!isEditOpen) {
+  const handleEditOpenChange = (open: boolean) => {
+    setIsEditOpen(open);
+    if (!open) {
       resetEditForm();
       setEditingUser(null);
     }
-  }, [isEditOpen]);
+  };
 
   if (loading) {
     return (
@@ -212,7 +214,7 @@ export default function UsersPage() {
         </div>
 
         {/* Create User Dialog */}
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <Dialog open={isCreateOpen} onOpenChange={handleCreateOpenChange}>
           <DialogTrigger asChild>
             <Button className="w-full sm:w-auto gap-2">
               <Plus className="h-4 w-4" /> Add User
@@ -426,7 +428,7 @@ export default function UsersPage() {
       </div>
 
       {/* Edit User Dialog */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+      <Dialog open={isEditOpen} onOpenChange={handleEditOpenChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit User</DialogTitle>

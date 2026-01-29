@@ -5,7 +5,12 @@ import { redirect } from 'next/navigation'
 
 const API_Base_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
 
-export async function login(currentState: any, formData: FormData) {
+interface LoginState {
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
+export async function login(currentState: LoginState | undefined, formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 

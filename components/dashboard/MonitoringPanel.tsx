@@ -1,23 +1,43 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useSSE } from "@/hooks/useSSE";
 import { useMonitorStore } from "@/store/useMonitorStore";
 import { MonitoringCard } from "./MonitoringCard";
-import { TrendChart } from "./TrendChart";
 import { SystemStats } from "./SystemStats";
-import { Signal, Droplets, Activity, Wifi, TimerReset } from "lucide-react";
+import { Signal, Droplets, Wifi } from "lucide-react";
+import { TimeAgo } from "./TimeAgo";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { useEffect } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+// Dynamic import for TrendChart - Recharts is ~300KB, lazy load it
+const TrendChart = dynamic(
+  () => import("./TrendChart").then((mod) => mod.TrendChart),
+  {
+    loading: () => (
+      <Card className="h-full">
+        <CardHeader>
+          <div className="h-6 w-32 bg-muted animate-pulse rounded" />
+          <div className="h-4 w-48 bg-muted animate-pulse rounded mt-1" />
+        </CardHeader>
+        <CardContent>
+          <div className="min-h-62.5 w-full bg-muted animate-pulse rounded" />
+        </CardContent>
+      </Card>
+    ),
+    ssr: false,
+  },
+);
+
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 export function MonitoringPanel() {
   // Initialize SSE
   useSSE(`${API_BASE_URL}/api/rssi/stream`);
 
   const { latestData, status, setHistory } = useMonitorStore();
-  const [timeAgo, setTimeAgo] = useState<string>("Never");
 
   // Fetch initial history
   useEffect(() => {
@@ -40,28 +60,6 @@ export function MonitoringPanel() {
     };
     fetchHistory();
   }, [setHistory]);
-
-  // Update "time ago" every second
-  useEffect(() => {
-    if (!latestData?.timestamp) return;
-
-    const updateInterval = setInterval(() => {
-      const date = new Date(latestData.timestamp);
-      // Ensure we don't show "in..." if client clock is slightly behind
-      const finalDate = date > new Date() ? new Date() : date;
-      setTimeAgo(
-        formatDistanceToNow(finalDate, {
-          addSuffix: true,
-        }),
-      );
-    }, 1000);
-
-    const date = new Date(latestData.timestamp);
-    const finalDate = date > new Date() ? new Date() : date;
-    setTimeAgo(formatDistanceToNow(finalDate, { addSuffix: true }));
-
-    return () => clearInterval(updateInterval);
-  }, [latestData?.timestamp]);
 
   const getRSSIColor = (rssi: number | undefined) => {
     if (rssi === undefined) return "text-muted-foreground";
@@ -137,13 +135,7 @@ export function MonitoringPanel() {
           icon={Droplets}
           statusColor="text-cyan-500"
         />
-        <MonitoringCard
-          title="Last Updated"
-          value={timeAgo}
-          unit=""
-          icon={TimerReset}
-          statusColor="text-purple-500"
-        />
+        <TimeAgo timestamp={latestData?.timestamp} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
