@@ -6,7 +6,6 @@ import { HistoryTable } from "@/components/history/HistoryTable";
 import { columns } from "@/components/history/columns";
 import { HistoryToolbar } from "@/components/history/HistoryToolbar";
 import { DateRange } from "react-day-picker";
-import { VisibilityState } from "@tanstack/react-table";
 
 export default function HistoryPage() {
   const {
@@ -22,7 +21,9 @@ export default function HistoryPage() {
     exportData,
   } = useRssiHistory({ initialLimit: 10 });
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({});
 
   const handleDateRangeChange = (range: DateRange | undefined) => {
     setDateRange(range);
